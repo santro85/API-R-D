@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>countdown page</title>
+    <link rel="stylesheet" href="styles/style.css"/>
+    <script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+      <div class="container">
+      <header>
+        <img src="images/TT-Logo.png" width="150px"/>
+      </header>
+
+<section class="countdown-box">
+  <h1>Here we go!</h1>
+<div>
+    <span id="count_num"><span>3</span></span>
+</div>
+</section>
+
+<section>
+<div class="loader-box hide">
+  <img src="images/loader.gif"/>
+</div>
+</section>
+
+<section>
+<div class="merchant-box hide">
+<h2>Congratulations!</h2>
+<h3>Santosh</h3>
+<p id="offer_title">You get 3 % discount on bill amount.</p>
+<p id="offer_description">Avail 3 % discount on your bill amount.
+ This offer is valid from 14/11/2018 to 21/02/2019.
+ Max discount amount is ₹ 5.
+ Offer applicable on a minimum bill amount of ₹ 5</p>
+<p class="text-center"><button type="submit" class="grabNow-btn">Grab Now</button></p>
+</div>
+</section>
+
+<section>
+<div class="info-box hide">
+<h2>Grabber Info</h2>
+<p>Please enter the below details to redeem your offer.</p>
+<form>
+  <div class="form-group">
+<label>Phone Number</label>
+<input type="text" id="phone"/>
+</div>
+<div class="form-group">
+<label>VPA</label>
+<input type="text" id="vpa"/>
+</div>
+</form>
+<p class="text-center"><button type="submit" class="proceed-btn">Proceed</button></p>
+
+
+</div>
+</section>
+
+<section>
+<div class="error-box hide">
+<h2>OOPS!</h2>
+<h3>Something went wrong.</h3>
+
+<p class="text-center"><button type="submit" class="tryAgain-btn">Try Again</button></p>
+</div>
+</section>
+
+
+
+<section>
+<div id="response">
+
+
+</div>
+
+</div>
+
+<script type="text/javascript">
+
+var phone, vpa, amount;
+$(document).ready(function(){
+
+
+  $(".tryAgain-btn").on("click", function(){
+    location.reload();
+  });
+
+  startCountDown();
+
+  $(".grabNow-btn").on("click", function(){
+    //$(this).parent().parent().html("<img src='images/barcode.png'/>");
+    $(this).parent().parent().addClass("hide");
+    $(".info-box").removeClass("hide");
+  });
+
+$(".proceed-btn").on("click", function(){
+   phone = $("#phone").val();
+   vpa = $("#vpa").val();
+   amount = "1";
+
+  $(this).parent().parent().addClass("hide");
+  $(".loader-box").removeClass("hide");
+  $.ajax({
+            async: true,
+            type: "GET",
+            //url: "https://capp.tonetag.com/api/v3/transactions/vpa_transfer?",
+            url: "https://packeldev.tonetag.com/api/v1/charge_slips/list_files?",
+            //data: {u_data : JSON.stringify(dataArray)},
+            //data: {phone:phone, vpa:vpa, amount:amount},
+            // data:{tid:86446398},
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+              //debugger;
+              var xyz = JSON.stringify(data);
+               alert("success:" + xyz);
+
+              //var response = JSON.parse(r)
+                  //alert(r['success']);
+            },
+            error: function (data){
+                //debugger;
+              //var response = JSON.parse(r)
+                var xyz = JSON.stringify(data);
+                alert("error:" + xyz);
+            }
+        });
+  setTimeout(function() {
+     $(".loader-box").addClass("hide");
+
+ }, 8000);
+});
+
+});
+
+function startCountDown(){
+    var counter = 3;
+    var Countdown = setInterval(function(){
+    $("#count_num span").html(counter);
+    counter--
+    if (counter == -1) {
+      clearInterval(Countdown);
+      $(".countdown-box").addClass("hide");
+      $(".merchant-box").removeClass("hide");
+    }
+}, 1000);
+
+}
+
+
+</script>
+    </body>
+    </html>
